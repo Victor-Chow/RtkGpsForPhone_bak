@@ -29,6 +29,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.listener.single.DialogOnDeniedPermissionListener;
@@ -663,12 +664,12 @@ public class RtkNaviService extends IntentService implements LocationListener {
         builder.setAutoCancel(false);*/
 
         String CHANNEL_ONE_ID = "CHANNEL_ONE_ID";
-        String CHANNEL_ONE_NAME = "CHANNEL_ONE_ID";
+        String CHANNEL_ONE_NAME = "前台服务通道";
         NotificationChannel notificationChannel = null;
         //进行8.0的判断
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
+                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.setShowBadge(true);
@@ -677,15 +678,20 @@ public class RtkNaviService extends IntentService implements LocationListener {
             manager.createNotificationChannel(notificationChannel);
         }
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jianshu.com/p/14ba95c6c3e2"));
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification notification = new Notification.Builder(this)
+
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, flags);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ONE_ID)
                 .setTicker("Nature")
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("这是一个测试标题")
                 .setContentIntent(pendingIntent)
                 .setContentText("这是一个测试内容")
+                .setOngoing(true) // 相当于 FLAG_NO_CLEAR，用户无法滑动删除
                 .build();
-        notification.flags |= Notification.FLAG_NO_CLEAR;
 
 
         return notification;
