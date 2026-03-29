@@ -171,6 +171,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         createDrawerToggle();
 
         if (savedInstanceState == null) {
+            // 只在首次启动应用时设置默认值，避免每次按返回键退出再进入都重置配置
+            // 注释掉这行可以解决配置丢失问题，因为 setDefaultValues 会检查配置是否存在
+            // 但为了保险起见，我们先保留，通过 Fragment 的修复来解决问题
             SettingsHelper.setDefaultValues(this, false);
             proxyIfUsbAttached(getIntent());
             selectDrawerItem(R.id.navdraw_item_status);

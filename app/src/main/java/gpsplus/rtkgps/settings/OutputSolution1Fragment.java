@@ -73,6 +73,8 @@ public class OutputSolution1Fragment extends PreferenceFragmentCompat {
         if (DBG) Log.v(getSharedPreferenceName(), "onCreate() bundle: " + savedInstanceState);
 
         getPreferenceManager().setSharedPreferencesName(getSharedPreferenceName());
+        // 只在首次创建时设置默认值，避免覆盖已保存的配置
+        setDefaultValues(getActivity(), false);
 
         initPreferenceScreen();
 
@@ -120,11 +122,13 @@ public class OutputSolution1Fragment extends PreferenceFragmentCompat {
 
         typePref = (StreamTypePreference)findPreference(KEY_TYPE);
         typePref.setValues(INPUT_STREAM_TYPES);
-        typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
 
         formatPref = (SolutionFormatPreference)findPreference(KEY_FORMAT);
         formatPref.setValues(SOLUTION_FORMATS);
-        formatPref.setDefaultValue(DEFAULT_SOLUTION_FORMAT);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // formatPref.setDefaultValue(DEFAULT_SOLUTION_FORMAT);
     }
 
     protected void streamSettingsButtonClicked() {

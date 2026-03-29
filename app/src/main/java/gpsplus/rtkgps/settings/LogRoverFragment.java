@@ -60,6 +60,8 @@ public class LogRoverFragment extends PreferenceFragmentCompat {
         if (DBG) Log.v(getSharedPreferenceName(), "onCreate() bundle: " + savedInstanceState);
 
         getPreferenceManager().setSharedPreferencesName(getSharedPreferenceName());
+        // 只在首次创建时设置默认值，避免覆盖已保存的配置
+        setDefaultValues(getActivity(), false);
 
         initPreferenceScreen();
         findPreference(KEY_STREAM_SETTINGS_BUTTON).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -104,7 +106,8 @@ public class LogRoverFragment extends PreferenceFragmentCompat {
 
         typePref = (StreamTypePreference)findPreference(KEY_TYPE);
         typePref.setValues(INPUT_STREAM_TYPES);
-        typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
     }
 
     protected void streamSettingsButtonClicked() {

@@ -85,11 +85,13 @@ public class InputCorrectionFragment extends InputRoverFragment {
         typePref = (StreamTypePreference)findPreference(KEY_TYPE);
         typePref.setTitle(R.string.input_streams_settings_correction_tab_title);
         typePref.setValues(CORRECTION_STREAM_TYPES);
-        typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // typePref.setDefaultValue(DEFAULT_STREAM_TYPE);
 
         formatPref = (StreamFormatPreference)findPreference(KEY_FORMAT);
         formatPref.setValues(CORRECTION_STREAM_FORMATS);
-        formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
     }
 
     @Nonnull

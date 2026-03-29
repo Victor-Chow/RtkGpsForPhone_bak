@@ -105,6 +105,8 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
         super.onCreate(savedInstanceState);
 
         getPreferenceManager().setSharedPreferencesName(getSharedPreferenceName());
+        // 只在首次创建时设置默认值，避免覆盖已保存的配置
+        setDefaultValues(getActivity(), false);
         initPreferenceScreen();
 
         mProcessingOptions = ProcessingOptions1Fragment.readPrefs(getActivity());
@@ -173,7 +175,6 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
     }
 
     protected void initPreferenceScreen() {
-
         final StreamFormatPreference formatPref;
 
         if (DBG) Log.v(getSharedPreferenceName(), "initPreferenceScreen()");
@@ -184,7 +185,8 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
 
         formatPref = (StreamFormatPreference)findPreference(KEY_FORMAT);
         formatPref.setValues(INPUT_STREAM_FORMATS);
-        formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
     }
 
     protected void initStreamTypePref() {

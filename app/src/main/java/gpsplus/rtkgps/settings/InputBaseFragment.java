@@ -68,7 +68,8 @@ public class InputBaseFragment extends InputRoverFragment {
 
         formatPref = (StreamFormatPreference)findPreference(KEY_FORMAT);
         formatPref.setValues(INPUT_STREAM_FORMATS);
-        formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
+        // 移除这里的 setDefaultValue，避免在 Fragment 重建时覆盖用户设置
+        // formatPref.setDefaultValue(DEFAULT_STREAM_FORMAT);
     }
 
     @Override
