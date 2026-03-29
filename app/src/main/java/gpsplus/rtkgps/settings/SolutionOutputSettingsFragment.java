@@ -70,12 +70,10 @@ public class SolutionOutputSettingsFragment extends PreferenceFragmentCompat {
     public void onResume() {
         super.onResume();
         reloadSummaries();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(mOnPreferenceChangeListener);
     }
 
     @Override
     public void onPause() {
-        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(mOnPreferenceChangeListener);
         super.onPause();
     }
 
