@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         createDrawerToggle();
 
         if (savedInstanceState == null) {
-            SettingsHelper.setDefaultValues(this, true);
+            SettingsHelper.setDefaultValues(this, false);
             proxyIfUsbAttached(getIntent());
             selectDrawerItem(R.id.navdraw_item_status);
             mDrawerLayout.openDrawer(mNavDrawer);
