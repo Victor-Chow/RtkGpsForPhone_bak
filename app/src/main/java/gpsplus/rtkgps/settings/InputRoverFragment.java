@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 public class InputRoverFragment extends PreferenceFragmentCompat {
 
     private static final boolean DBG = BuildConfig.DEBUG & true;
+    private static final String TAG = InputRoverFragment.class.getSimpleName();
 
     public static final String SHARED_PREFS_NAME = "InputRover";
     public static final String KEY_ENABLE = "enable";
@@ -154,6 +155,10 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
         if (DBG) Log.v(getSharedPreferenceName(), "onResume()");
         refresh();
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(mPreferenceChangeListener);
+        
+        // 调试：打印当前读取的配置
+        SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        Log.d(TAG, "onResume - Current prefs: " + prefs.getAll().toString());
     }
 
     @Override
@@ -254,6 +259,9 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
         settingsButtonPref = findPreference(KEY_STREAM_SETTINGS_BUTTON);
         positionButtonpref = findPreference(KEY_STATION_POSITION_BUTTON);
         antennaList = (ListPreference)findPreference(KEY_ANTENNA);
+        
+        // 调试：打印当前 UI 显示的值
+        Log.d(TAG, "refresh() - type=" + typePref.getValue() + ", format=" + formatPref.getValue());
 
         typePref.setSummary(getString(typePref.getValueT().getNameResId()));
         formatPref.setSummary(getString(formatPref.getValueT().getNameResId()));
@@ -280,6 +288,8 @@ public class InputRoverFragment extends PreferenceFragmentCompat {
         @Override
         public void onSharedPreferenceChanged(
                 SharedPreferences sharedPreferences, String key) {
+            Log.d(TAG, "Preference changed: " + key + " = " + 
+                sharedPreferences.getAll().toString());
             refresh();
         }
     };
