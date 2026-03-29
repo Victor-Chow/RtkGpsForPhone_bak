@@ -1,18 +1,33 @@
 package gpsplus.rtkgps.settings;
 
-import java.util.List;
-
-import gpsplus.rtkgps.R;
-import android.preference.PreferenceActivity;
+import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+import androidx.fragment.app.FragmentTransaction;
 
-public class SettingsActivity extends PreferenceActivity {
+import gpsplus.rtkgps.R;
+
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.preference_headers, target);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // 显示返回按钮
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        
+        // 直接加载 ProcessingOptions1Fragment 作为主设置界面
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(android.R.id.content, new ProcessingOptions1Fragment());
+            transaction.commit();
+        }
     }
 
     @Override
@@ -24,17 +39,4 @@ public class SettingsActivity extends PreferenceActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-    protected boolean isValidFragmentA(String fragmentName) {
-        return ProcessingOptions1Fragment.class.getName().equals(fragmentName);
-    }
-    protected boolean isValidFragment(String fragmentName) {
-        // Three setting panels can hit this:
-        String processingPanel = ProcessingOptions1Fragment.class.getName();
-        String solutionPanel = SolutionOutputSettingsFragment.class.getName();
-        String ntripcasterPanel = NTRIPCasterSettingsFragment.class.getName();
-        return (processingPanel.equals(fragmentName) || solutionPanel.equals(fragmentName) || ntripcasterPanel.equals(fragmentName));
-    }
-
 }

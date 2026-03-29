@@ -5,13 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
-import android.preference.PreferenceFragment;
 import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import gpsplus.rtkgps.BuildConfig;
 import gpsplus.rtkgps.R;
@@ -19,7 +20,7 @@ import gpsplus.rtklib.SolutionOptions;
 import gpsplus.rtklib.constants.GeoidModel;
 import gpsplus.rtklib.constants.TimeSystem;
 
-public class SolutionOutputSettingsFragment extends PreferenceFragment {
+public class SolutionOutputSettingsFragment extends PreferenceFragmentCompat {
 
     @SuppressWarnings("unused")
     private static final boolean DBG = BuildConfig.DEBUG & true;
@@ -56,11 +57,8 @@ public class SolutionOutputSettingsFragment extends PreferenceFragment {
     private SolutionOptions mSolutionOptions;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         getPreferenceManager().setSharedPreferencesName(SHARED_PREFS_NAME);
-
         addPreferencesFromResource(R.xml.solution_output_settings);
 
         mSolutionOptions = readPrefs(getActivity());
@@ -72,6 +70,13 @@ public class SolutionOutputSettingsFragment extends PreferenceFragment {
     public void onResume() {
         super.onResume();
         reloadSummaries();
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(mOnPreferenceChangeListener);
+    }
+
+    @Override
+    public void onPause() {
+        getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(mOnPreferenceChangeListener);
+        super.onPause();
     }
 
     public static SolutionOptions readPrefs(Context ctx) {
@@ -276,7 +281,7 @@ public class SolutionOutputSettingsFragment extends PreferenceFragment {
 
     }
 
-    private final OnPreferenceChangeListener mOnPreferenceChangeListener = new OnPreferenceChangeListener() {
+    private final Preference.OnPreferenceChangeListener mOnPreferenceChangeListener = new Preference.OnPreferenceChangeListener() {
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
