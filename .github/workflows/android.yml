@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, dev ]
     tags:
       - 'v*'  # 添加标签触发
   pull_request:
